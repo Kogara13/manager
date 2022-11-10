@@ -61,10 +61,13 @@ def checkDatabase():
 
 def addPassword():
     newName = input("Enter the name of the new account: ")
-    newPassword = getpass.getpass(prompt='Enter the password of the new account: ')
-    confirmPassword = getpass.getpass(prompt='Confirm new password: ')
-    while(newPassword != confirmPassword):
-        confirm = getpass.getpass(prompt='Two different passwords entered. Please reconfirm password: ') 
+    while(True):
+        newPassword = getpass.getpass(prompt='Enter the password of the new account: ')
+        confirmPassword = getpass.getpass(prompt='Confirm new password: ')
+        if newPassword != confirmPassword:
+            print('Two different passwords entered. Please reconfirm password') 
+        else:
+            break
     command = "INSERT INTO entries (Account, Password) VALUES (%s, %s)"
     entry = (newName, newPassword)
     database = mysql.connector.connect(
@@ -112,4 +115,63 @@ def deleteSelectedPassword():
     elif (check == 'N' or check == 'n'):
         print("Account deletion suspended.", end = ' ' )
 
+def editSelection(): 
+    database = mysql.connector.connect(
+            host ='localhost', 
+            user = usernameEntry, 
+            password = passwordEntry,
+            database = 'passwords'
+   )
+    dbcursor = database.cursor()
+    print("Account |  Password")
+    print("-------------------")
+    dbcursor.execute("SELECT * FROM entries")
+    for x in dbcursor:
+        print(x)
+    while(True):
+        selection = input("Enter the name of the account you would like to edit: ")       
+        try:
+            selectionCommand = """SELECT * FROM entries where Account = '%s'""" % (selection)
+            dbcursor.execute(selectionCommand)
+            showSelection = dbcursor.fetchone()
+            print("Selected: ", end=' ')
+            for n in showSelection:
+                print(n + " |", end=' ')
+            break
+        except:
+            print("Selection not found in database. Please enter again: ")
+        
+    print("\n1. Name\n2. Password\n")
+    nameOrPassword = input("Would you like to edit the name(1) or password(2) of this entry?: ") 
+    while(True):
+        if nameOrPassword == '1':
+            newName = input("Enter the new name for this entry: ")
+            confirmNewName = input("Are you sure you want to change the name to " + newName + "? [Y/n]: ")
+            if (confirmNewName == 'Y' or confirmNewName == 'y'):
+                #kcode to edit database
+                print("edit complete (not)")
+                break
+            elif (confirmNewName == 'N' or confirmNewName == 'n'):
+                print("Account edit suspended.", end = ' ')        
+                break
+        elif (nameOrPassword == '2'):
+            while(True):
+                newPassword = getpass.getpass(prompt="Enter the new password for this entry: ")
+                confirmNewPassword = getpass.getpass(prompt="Confirm new password (Type [N,n] to cancel): ")
+                if (confirmNewPassword == 'N' or confirmNewPassword == 'n'):
+                    print("Password edit suspended.", end = ' ')
+                    break
+                elif (confirmNewPassword == newPassword):
+                    #code to edit database
+                    print("Password edit complete.", end = ' ')
+                    break
+                elif (confirmNewPassword != newPassword): 
+                    print("Two different passwords entered. Please reconfirm password") 
+            break
+        else: 
+            print("incorrect entry")
+
+def generatePassword():
+    length = input("Enter the length of the generated password: ")
+    symbolsChoice = input("Include symbols (!@#$%6&*) as well as alphanumeric characters? [Y/n]:  
 

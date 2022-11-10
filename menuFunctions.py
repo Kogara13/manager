@@ -4,6 +4,7 @@ import mysql.connector
 import databaseFunctions as database
 import getpass
 import os
+from sys import exit
 import pyfiglet as fig
 from time import sleep
 
@@ -17,6 +18,7 @@ def mainMenu():
     print(" 3. Edit Password")
     print(" 4. Generate Password")
     print(" 5. Create Account")
+    print(" Q. Quit")
     print("------------------------------------------")
     while(True):
         selection = int(input("Choose and option: "))
@@ -31,6 +33,8 @@ def mainMenu():
             generateCheck += 1
         elif database.usernameEntry == "root" and selection == 5:
             accountMenu()
+        elif (selection == 'Q' or selection == 'q'):
+            sys.exit()
         else:
             print("Invalid entry")
 
@@ -55,22 +59,9 @@ def deleteMenu():
 def editMenu():
     os.system('clear')
     generateTitle("Edit Entry")
-
-    selection = input("Enter which account you would like to edit: ")
-    print(" 1. Entry name")
-    print(" 2. Entry Password")
-    print("------------------------------------------")
-    entry = int(input("Would you like to change the entry or the password (Enter # of choice): "))
-    
-    if entry == 1:
-        edit = input("What would you like to change the name to?: ")
-        confirm = input("Confirm new entry name: ")
-        print("Name", end = ' ')
-    elif entry == 2:    
-        edit = getpass.getpass(prompt="What would you like to change the password to?: ")
-        confirm = getpass.getpass(prompt="Confirm new password: ")
-        print("Password", end = ' ')
-    print("changed. Returning to Main Menu...")
+    database.checkDatabase()
+    database.editSelection()
+    print("Returning to Main Menu...")
     sleep(3)
     mainMenu()
     
