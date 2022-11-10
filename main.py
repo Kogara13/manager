@@ -4,12 +4,13 @@ import pyfiglet as fig
 import mysql.connector
 import getpass
 import menuFunctions as menu    
+import databaseFunctions as database
 
 menu.generateTitle("Pass Manager")
-usernameEntry = input("Enter your Username: ")
-passwordEntry = getpass.getpass(prompt='Enter your Database Password: ')
-entry = True
 
-if entry == True:
+check = database.passwordCheck()
+if (check):
     menu.mainMenu()
+else:
+    print("error")
 

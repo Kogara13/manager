@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import mysql.connector
+import databaseFunctions as database
 import getpass
 import os
 import pyfiglet as fig
@@ -15,41 +16,43 @@ def mainMenu():
     print(" 2. Delete Password")
     print(" 3. Edit Password")
     print(" 4. Generate Password")
+    print(" 5. Create Account")
     print("------------------------------------------")
-    selection = int(input("Choose and option: "))
-    if selection == 1:
-        addPassword()
-    elif selection == 2:
-        deletePassword()
-    elif selection == 3:
-        editPassword()
-    elif selection == 4:
-        generatePassword(generateCheck)
-        generateCheck += 1
+    while(True):
+        selection = int(input("Choose and option: "))
+        if selection == 1:
+            addMenu()
+        elif selection == 2:
+            deleteMenu()
+        elif selection == 3:
+            editMenu()
+        elif selection == 4:
+            generateMenu(generateCheck)
+            generateCheck += 1
+        elif database.usernameEntry == "root" and selection == 5:
+            accountMenu()
+        else:
+            print("Invalid entry")
 
-def addPassword():
+def addMenu():
     os.system('clear')
     generateTitle("Add Entry")
-    name = input("Enter the Account name: ")
-    password = getpass.getpass(prompt="Enter the Password for the Account: ")
-    passwordCheck = getpass.getpass(prompt="Reenter the Password: ")
-
+    database.checkDatabase()
+    database.addPassword()
     print("Password entered into database. Returning to main menu...")
     sleep(3)
     mainMenu()
 
-def deletePassword():
+def deleteMenu():
     os.system('clear')
     generateTitle("Delete Entry")
-
-    selection = input("Enter which account you would like to delete: ")
-    check = input("Are you sure you want to delete this account entry? [Y/n] ")
-
-    print("Account deleted. Returning to Main Menu...")
+    database.checkDatabase()
+    database.deleteSelectedPassword()
+    print("Returning to Main Menu...")
     sleep(3)
     mainMenu()
 
-def editPassword():
+def editMenu():
     os.system('clear')
     generateTitle("Edit Entry")
 
@@ -71,7 +74,7 @@ def editPassword():
     sleep(3)
     mainMenu()
     
-def generatePassword():
+def generateMenu():
     os.system('clear')
     generateTitle("Pass Gen")
 
@@ -95,6 +98,22 @@ def generatePassword():
     sleep(3)
     mainMenu()
 
+def accountMenu():
+    os.system('clear')
+    generateTitle("Create Account")
+
+    newUser = input("Enter the new user name: ")
+    newPassword = input("Enter the new user password: ")
+    while(True):
+        confirmPassword = input("Retype the new password: ")
+        if confirmPassword == newPassword:
+            #access database functions to create account
+            break
+    print("New account created. Returning to Main Menu...")
+    sleep(3)
+    mainMenu()
+    
+    
 def generateTitle(page):
     ascii_title = fig.figlet_format(page, font = "banner3-D", width = 200)
     print(ascii_title)
