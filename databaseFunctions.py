@@ -3,6 +3,8 @@
 from time import sleep
 import mysql.connector
 import getpass
+import random
+import string
 
 #usernameEntry = ""
 #passwordEntry = ""
@@ -10,14 +12,14 @@ import getpass
 def passwordCheck():
     check = False
     while(check == False):
-        global usernameEntry 
-        usernameEntry = input("Enter your Username: ") 
+        #global usernameEntry 
+        #usernameEntry = input("Enter your Username: ") 
         global passwordEntry
-        passwordEntry = getpass.getpass(prompt='Enter Password: ')
+        passwordEntry = getpass.getpass(prompt='Enter Master Password: ')
         try:
-            mydb = mysql.connector.connect(
+            database = mysql.connector.connect(
                     host ='localhost', 
-                    user = usernameEntry, 
+                    user = 'root', 
                     password = passwordEntry
             )
             #dbcursor = mydb.cursor()
@@ -34,7 +36,7 @@ def passwordCheck():
 def checkDatabase():
         database = mysql.connector.connect(
                 host ='localhost', 
-                user = usernameEntry, 
+                user = 'root', 
                 password = passwordEntry,
         )
         dbcursor = database.cursor()
@@ -49,7 +51,7 @@ def checkDatabase():
             dbcursor.execute("CREATE DATABASE passwords") 
             database = mysql.connector.connect(
                     host ='localhost', 
-                    user = usernameEntry, 
+                    user = 'root', 
                     password = passwordEntry,
                     database = 'passwords'
             )
@@ -60,7 +62,25 @@ def checkDatabase():
             sleep(2)
 
 def addPassword():
-    newName = input("Enter the name of the new account: ")
+    database = mysql.connector.connect(
+            host ='localhost', 
+            user = 'root', 
+            password = passwordEntry,
+            database = 'passwords'
+    )
+    dbcursor = database.cursor()    
+    while(True):
+        try:
+            newName = input("Enter the name of the new account: ")
+            checkIfExists = """SELECT * FROM entries WHERE Account='%s'""" % (newName)
+            dbcursor = database.execute(checkIfExists)
+            for x in dbcursor:
+                entries = x
+        except:
+            break
+        else:
+            print("Name already exists")
+
     while(True):
         newPassword = getpass.getpass(prompt='Enter the password of the new account: ')
         confirmPassword = getpass.getpass(prompt='Confirm new password: ')
@@ -70,20 +90,13 @@ def addPassword():
             break
     command = "INSERT INTO entries (Account, Password) VALUES (%s, %s)"
     entry = (newName, newPassword)
-    database = mysql.connector.connect(
-            host ='localhost', 
-            user = usernameEntry, 
-            password = passwordEntry,
-            database = 'passwords'
-    )
-    dbcursor = database.cursor()    
     dbcursor.execute(command, entry)
     database.commit()
     
 def deleteSelectedPassword():
     database = mysql.connector.connect(
             host ='localhost', 
-            user = usernameEntry, 
+            user = 'root', 
             password = passwordEntry,
             database = 'passwords'
    )
@@ -118,7 +131,7 @@ def deleteSelectedPassword():
 def editSelection(): 
     database = mysql.connector.connect(
             host ='localhost', 
-            user = usernameEntry, 
+            user = 'root', 
             password = passwordEntry,
             database = 'passwords'
    )
@@ -149,7 +162,10 @@ def editSelection():
             confirmNewName = input("Are you sure you want to change the name to " + newName + "? [Y/n]: ")
             if (confirmNewName == 'Y' or confirmNewName == 'y'):
                 #kcode to edit database
-                print("edit complete (not)")
+                editNameCommand = """UPDATE entries SET Account = '%s' Where Account = '%s'""" % (newName, selection)
+                dbcursor.execute(editNameCommand) 
+                database.commit()
+                print("edit complete")
                 break
             elif (confirmNewName == 'N' or confirmNewName == 'n'):
                 print("Account edit suspended.", end = ' ')        
@@ -163,6 +179,9 @@ def editSelection():
                     break
                 elif (confirmNewPassword == newPassword):
                     #code to edit database
+                    editPasswordCommand = """UPDATE entries SET Password = '%s' Where Account = '%s'""" % (newPassword, selection)
+                    dbcursor.execute(editPasswordCommand) 
+                    database.commit()
                     print("Password edit complete.", end = ' ')
                     break
                 elif (confirmNewPassword != newPassword): 
@@ -172,6 +191,86 @@ def editSelection():
             print("incorrect entry")
 
 def generatePassword():
-    length = input("Enter the length of the generated password: ")
-    symbolsChoice = input("Include symbols (!@#$%6&*) as well as alphanumeric characters? [Y/n]:  
+    characters = string.ascii_lowercase + string.ascii_uppercase + string.digits
+    symbols = "~!@#$%^&*_-+=<>"
+    while(True):
+        try:
+            length = int(input("Enter the length of the generated password: "))
+        except:
+            print("Enter an integer value")
+        if (length < 10):
+            print("Password must at least be 10 characters long")
+            continue
+        elif (length > 32):
+            print("Password must be no more than 32 characters long")
+            continue
+        else:
+            break
+    while(True):
+        symbolsChoice = input("Include symbols (~!@#$%^&*_-+=<>) as well as alphanumeric characters? [Y/n]:")  
+        if symbolsChoice == 'Y' or symbolsChoice == 'y':
+            generatedPassword = ''.join(random.choice(characters + symbols) for n in range(length))
+            break
+        elif symbolsChoice == 'N' or symbolsChoice == 'n':
+            generatedPassword = ''.join(random.choice(characters) for n in range(length))
+            break
+        else:
+            print("Invalid input")
+    print("Geniferated Password: " + generatedPassword)
+    database = mysql.connector.connect(
+            host ='localhost', 
+            user = 'root', 
+            password = passwordEntry,
+            database = 'passwords'
+    )
+    dbcursor = database.cursor()
+    print("1. Edit existing entry\n2. Create new entry")
+    editOrCreate = input("Would you like to add this to an existing entry to create a new one with it?")
+    if editOrCreate == '1':
+        print("Account |  Password")
+        print("-------------------")
+        dbcursor.execute("SELECT * FROM entries")
+        for x in dbcursor:
+            print(x)
+        while(True):
+            selection = input("Enter the name of the account you would like to edit: ")       
+            try:
+                selectionCommand = """SELECT * FROM entries where Account = '%s'""" % (selection)
+                dbcursor.execute(selectionCommand)
+                showSelection = dbcursor.fetchone()
+                print("Selected: ", end=' ')
+                for n in showSelection:
+                    print(n + " |", end=' ')
+                break
+            except:
+                print("Selection not found in database. Please enter again: ")
+        while(True):
+            confirmNewPassword = input("Confirm change of password [Y/n]: ")
+            if (confirmNewPassword == 'N' or confirmNewPassword == 'n'):
+                print("Password edit suspended.", end = ' ')
+                break
+            elif (confirmNewPassword == 'Y' or confirmNewPassword == 'y'):
+                editPasswordCommand = """UPDATE entries SET Password = '%s' Where Account = '%s'""" % (generatedPassword, selection)
+                dbcursor.execute(editPasswordCommand) 
+                database.commit()
+                print("Password edit complete.", end = ' ')
+                break
+            else: 
+                print("Invalid input")
+    elif editOrCreate == '2':        
+        newName = input("Enter the name of the new account: ")
+        print("Account: " + newName + "\nPassword: " + generatedPassword)
+        confirm = input("Confirm creation of the following entry [Y/n]: ")
+        while(True):
+            if (confirm == 'Y' or confirm == 'y'):
+                command = "INSERT INTO entries (Account, Password) VALUES (%s, %s)"
+                entry = (newName, generatedPassword) 
+                dbcursor.execute(command, entry)
+                database.commit()
+                print("New entry created.", end = ' ')
+                break
+            elif (confirm == 'N' or confirm == 'n'):
+                print("Entry creation suspended.", end = ' ')
+                break
+
 

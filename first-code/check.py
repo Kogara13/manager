@@ -2,33 +2,26 @@
 
 import mysql.connector
 
+name = input("Enter test: ")
 mydb = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='ManagerProject'
+        password='ManagerProject',
+        database='test'
 )
 
 dbcursor = mydb.cursor()
 
 try:
-    dbcursor.execute("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='test'")
+    command = """SELECT * FROM testTable WHERE Account='%s'""" % (name)
+
+    dbcursor.execute(command)   
     for x in dbcursor:
         entries = x
-    if len(entries) == 1:
-        print("database exists")
+    if len(entries) == 2:
+        print("name already exists")
 except:
-    print("doen't exist. creating now")
-    dbcursor.execute("CREATE DATABASE test")
-    mydb = mysql.connector.connect(
-            host='localhost',
-            user='root',
-            password='ManagerProject',
-            database='test'
-    )
-    dbcursor = mydb.cursor()
-    dbcursor.execute("CREATE TABLE testTable (Account varchar(255), password varchar(255))")
-    print("Database created")
+    print("doen't exist.")
 
-name="testName"
 
 
