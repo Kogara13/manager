@@ -69,10 +69,12 @@ def addPassword():
             database = 'passwords'
     )
     dbcursor = database.cursor()    
+    newName = input("Enter the name of the new account: ")
+    """
     while(True):
         try:
             newName = input("Enter the name of the new account: ")
-            checkIfExists = """SELECT * FROM entries WHERE Account='%s'""" % (newName)
+            checkIfExists = SELECT * FROM entries WHERE Account='%s' % (newName)
             dbcursor = database.execute(checkIfExists)
             for x in dbcursor:
                 entries = x
@@ -80,7 +82,7 @@ def addPassword():
             break
         else:
             print("Name already exists")
-
+    """
     while(True):
         newPassword = getpass.getpass(prompt='Enter the password of the new account: ')
         confirmPassword = getpass.getpass(prompt='Confirm new password: ')
