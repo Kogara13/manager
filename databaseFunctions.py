@@ -11,6 +11,7 @@ import string
 
 def passwordCheck():
     check = False
+    passwordCheck = 2
     while(check == False):
         #global usernameEntry 
         #usernameEntry = input("Enter your Username: ") 
@@ -28,10 +29,15 @@ def passwordCheck():
             #for x in dbcursor:
             #    print(x)
         except:
-            print("Incorrect Entry")
+            if passwordCheck > 0:
+                print("Incorrect Entry. " + str(passwordCheck) + " attempts remaining")
+                passwordCheck = passwordCheck - 1
+            else:
+                print("Incorrect Entry. Access Denied")
+                break
         else: 
             check = True
-    return True
+    return check
 
 def checkDatabase():
         database = mysql.connector.connect(
@@ -83,17 +89,24 @@ def addPassword():
         else:
             print("Name already exists")
     """
+    newPassword = getpass.getpass(prompt='Enter the password of the new account: ')
+    errorCounter = 3
     while(True):
-        newPassword = getpass.getpass(prompt='Enter the password of the new account: ')
         confirmPassword = getpass.getpass(prompt='Confirm new password: ')
         if newPassword != confirmPassword:
-            print('Two different passwords entered. Please reconfirm password') 
+            errorCounter = errorCounter - 1
+            if errorCounter > 0:
+                print('Two different passwords entered. Please reconfirm password (Process will abort after ' + str(errorCounter) + ' more failed attempts)') 
+            else:
+                print("Too many failed attempts. ", end = ' ')
+                break
         else:
+            command = "INSERT INTO entries (Account, Password) VALUES (%s, %s)"
+            entry = (newName, newPassword)
+            dbcursor.execute(command, entry)
+            database.commit()
+            print("Password entered into database. ", end = ' ')
             break
-    command = "INSERT INTO entries (Account, Password) VALUES (%s, %s)"
-    entry = (newName, newPassword)
-    dbcursor.execute(command, entry)
-    database.commit()
     
 def deleteSelectedPassword():
     database = mysql.connector.connect(

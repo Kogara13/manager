@@ -38,7 +38,7 @@ def addMenu():
     generateTitle("Add Entry")
     database.checkDatabase()
     database.addPassword()
-    print("Password entered into database. Returning to main menu...")
+    print("Returning to main menu...")
     sleep(3)
     mainMenu()
 

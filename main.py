@@ -6,15 +6,19 @@ import getpass
 import menuFunctions as menu    
 import databaseFunctions as database
 from time import sleep
+import os
 
 def main():
+    os.system('clear')
     menu.generateTitle("Pass Manager")
 
     check = database.passwordCheck()
     if (check):
         menu.mainMenu()
     else:
-        print("error")
+        print("\nGoodbye\n")
+        sleep(1)
+        return
     print("\nGoodbye\n")
     sleep(1) 
     return
