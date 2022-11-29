@@ -14,7 +14,7 @@ def main():
 
     check = database.passwordCheck()
     if (check):
-       mainMenu()
+        menu.mainMenu()
     else:
         print("\nGoodbye\n")
         sleep(1)

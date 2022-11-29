@@ -67,8 +67,7 @@ def checkDatabase():
         finally:
             sleep(2)
 
-def addPassword():
-    
+def addPassword(): 
     database = mysql.connector.connect(
             host ='localhost', 
             user = 'root', 
@@ -87,17 +86,13 @@ def addPassword():
         for x in count:
             entries = x
         if entries == 1:
-            print("Name already exists")
-<<<<<<< HEAD
-    """
-    newPassword = getpass.getpass(prompt='Enter the password of the new account: ')
-    errorCounter = 3
-=======
+            print("Name already exists") 
             continue
         else:
             break
     
->>>>>>> error-check
+    newPassword = getpass.getpass(prompt='Enter the password of the new account: ')
+    errorCounter = 3
     while(True):
         confirmPassword = getpass.getpass(prompt='Confirm new password: ')
         if newPassword != confirmPassword:
