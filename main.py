@@ -8,6 +8,8 @@ import databaseFunctions as database
 from time import sleep
 import os
 
+#This comment is left to test the merge
+
 def main():
     os.system('clear')
     menu.generateTitle("Pass Manager")
