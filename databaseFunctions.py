@@ -68,29 +68,36 @@ def checkDatabase():
             sleep(2)
 
 def addPassword():
+    
     database = mysql.connector.connect(
             host ='localhost', 
             user = 'root', 
             password = passwordEntry,
             database = 'passwords'
     )
+    
     dbcursor = database.cursor()    
-    newName = input("Enter the name of the new account: ")
-    """
+   #newName = input("Enter the name of the new account: ")
+    
     while(True):
-        try:
-            newName = input("Enter the name of the new account: ")
-            checkIfExists = SELECT * FROM entries WHERE Account='%s' % (newName)
-            dbcursor = database.execute(checkIfExists)
-            for x in dbcursor:
-                entries = x
-        except:
-            break
-        else:
+        newName = input("Enter the name of the new account: ")
+        checkQuery ="""SELECT COUNT(Account) FROM entries WHERE Account='%s'""" % (newName) 
+        dbcursor.execute(checkQuery)
+        count = dbcursor.fetchone()
+        for x in count:
+            entries = x
+        if entries == 1:
             print("Name already exists")
+<<<<<<< HEAD
     """
     newPassword = getpass.getpass(prompt='Enter the password of the new account: ')
     errorCounter = 3
+=======
+            continue
+        else:
+            break
+    
+>>>>>>> error-check
     while(True):
         confirmPassword = getpass.getpass(prompt='Confirm new password: ')
         if newPassword != confirmPassword:

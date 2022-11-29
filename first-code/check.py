@@ -2,26 +2,22 @@
 
 import mysql.connector
 
-name = input("Enter test: ")
 mydb = mysql.connector.connect(
         host='localhost',
         user='root',
         password='ManagerProject',
-        database='test'
+        database='passwords'
 )
 
 dbcursor = mydb.cursor()
 
-try:
-    command = """SELECT * FROM testTable WHERE Account='%s'""" % (name)
+query1 ="SELECT COUNT(Account) FROM entries WHERE Account='python'"
+dbcursor.execute(query1)
+cnt=dbcursor.fetchone()
 
-    dbcursor.execute(command)   
-    for x in dbcursor:
-        entries = x
-    if len(entries) == 2:
-        print("name already exists")
-except:
-    print("doen't exist.")
+print(cnt)
 
+for x in cnt:
+    print(x) 
 
-
+print(type(x))

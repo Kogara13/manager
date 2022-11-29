@@ -9,7 +9,7 @@ import pyfiglet as fig
 from time import sleep
 
     
-def mainMenu(): 
+    def mainMenu(): 
     os.system('clear')
     generateTitle("Main Menu")
     print(" 1. Add Password")
