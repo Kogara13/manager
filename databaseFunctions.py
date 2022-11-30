@@ -7,15 +7,11 @@ import random
 import string
 import pyperclip
 
-#usernameEntry = ""
-#passwordEntry = ""
 
 def passwordCheck():
     check = False
     passwordCheck = 2
     while(check == False):
-        #global usernameEntry 
-        #usernameEntry = input("Enter your Username: ") 
         global passwordEntry
         passwordEntry = getpass.getpass(prompt='Enter Master Password: ')
         try:
@@ -24,11 +20,6 @@ def passwordCheck():
                     user = 'root', 
                     password = passwordEntry
             )
-            #dbcursor = mydb.cursor()
-            #dbcursor.execute("SHOW DATABASES")
-
-            #for x in dbcursor:
-            #    print(x)
         except:
             if passwordCheck > 0:
                 print("Incorrect Entry. " + str(passwordCheck) + " attempts remaining")
@@ -77,7 +68,6 @@ def addPassword():
     )
     
     dbcursor = database.cursor()    
-   #newName = input("Enter the name of the new account: ")
     
     while(True):
         newName = input("Enter the name of the new account: ")
@@ -159,7 +149,6 @@ def searchDatabase():
             database = 'passwords'
    )
     dbcursor = database.cursor()
-    #found = True
     while(True):
             search = input("Enter the name of the Account: ")
             countCommand = """SELECT COUNT(Account) FROM entries WHERE Account='%s' OR Account=LCASE('%s')""" % (search, search)
@@ -200,8 +189,6 @@ def searchDatabase():
             print("Password of Account: " + chosenPassword)
             exit = input("You may copy the password to your clipboard (Ctrl + Shift + V). Press Enter to return to the Main Menu.")
             break
-            #pyperclip.copy(chosenPassword) 
-            #passwordClip = pyperclip.paste()
     
 def editSelection(): 
     database = mysql.connector.connect(

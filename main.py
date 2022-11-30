@@ -36,14 +36,19 @@ def mainMenu():
         selection = input("Choose an option: ")
         if selection == '1':
             menu.addMenu()
+            continue
         elif selection == '2':
             menu.deleteMenu()
+            continue
         elif selection == '3':
             menu.searchMenu()
+            continue
         elif selection == '4':
             menu.editMenu()
+            continue
         elif selection == '5':
             menu.generateMenu()
+            continue
         elif (selection == 'Q' or selection == 'q'):
             os.system('clear')
             confirmQuit = input("Are you sure you want to quit? [Y/N]:  ")
