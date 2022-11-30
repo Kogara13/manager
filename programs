@@ -7,5 +7,6 @@ mysql
 pip
 	pyfiglet
 Tkinter
+pyperclip
 pynput
 keyboard

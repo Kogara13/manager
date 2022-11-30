@@ -59,6 +59,15 @@ def editMenu():
     print("Returning to Main Menu...")
     sleep(3)
     mainMenu()
+
+def searchMenu():
+    os.system('clear')
+    generateTitle("Search")
+    database.checkDatabase()
+    database.searchDatabase()
+    print("Returning to main Menu...")
+    sleep(3)
+    mainMenu()
     
 def generateMenu():
     os.system('clear')

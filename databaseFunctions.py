@@ -5,6 +5,7 @@ import mysql.connector
 import getpass
 import random
 import string
+import pyperclip
 
 #usernameEntry = ""
 #passwordEntry = ""
@@ -106,7 +107,7 @@ def addPassword():
                 print("Too many failed attempts. ", end = ' ')
                 break
         else:
-            command = "INSERT INTO entries (Account, Password) VALUES (%s, %s)"
+            command = "INSERT INTO entries (Account, Password) VALUES (LCASE(%s), %s)"
             entry = (newName, newPassword)
             dbcursor.execute(command, entry)
             database.commit()
@@ -147,6 +148,44 @@ def deleteSelectedPassword():
         print("Account deleted.", end = ' ')
     elif (check == 'N' or check == 'n'):
         print("Account deletion suspended.", end = ' ' )
+
+def searchDatabase():
+    database = mysql.connector.connect(
+            host ='localhost', 
+            user = 'root', 
+            password = passwordEntry,
+            database = 'passwords'
+   )
+    dbcursor = database.cursor()
+    while(True):
+            search = input("Enter the name of the Account: ")
+            countCommand = """SELECT COUNT(Account) FROM entries WHERE Account='%s' OR Account=LCASE('%s')""" % (search)
+            dbcursor.execute(numberOfResults)
+            numOfResults = dbcursor.fetchone()
+            for x in numOfResults:
+                results = x
+            if results < 1:
+                notFound = input("Entry not found. Press Enter to retry or Q to quit")
+                if (notFound == 'Q' or notFound == 'q'):
+                    break
+                else:
+                    continue
+            searchCommand = """SELECT * FROM entries WHERE Account='%s' OR Account=LCASE('%s')""" % (search)
+            dbcursor.execute(searchCommand)
+            print("Account | Password")
+            print("------------------")
+            searchList = []
+            count = 1
+            for x in dbcursor:
+                print(count + ". " + x)
+                searchList.append(x[1])
+                count += 1
+            selectPassword = input("Enter the number of the desired password: ")
+            chosenPassword = searchList[selectPassword]
+            pyperclip.copy(chosenPassword) 
+    
+
+
 
 def editSelection(): 
     database = mysql.connector.connect(
