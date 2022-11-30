@@ -80,6 +80,9 @@ def addPassword():
     
     while(True):
         newName = input("Enter the name of the new account: ")
+        if newName == "":
+            print("Empty string entered. ", end='')
+            continue
         checkQuery ="""SELECT COUNT(Account) FROM entries WHERE Account='%s'""" % (newName) 
         dbcursor.execute(checkQuery)
         count = dbcursor.fetchone()
