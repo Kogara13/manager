@@ -159,7 +159,7 @@ def searchDatabase():
             database = 'passwords'
    )
     dbcursor = database.cursor()
-    found = True
+    #found = True
     while(True):
             search = input("Enter the name of the Account: ")
             countCommand = """SELECT COUNT(Account) FROM entries WHERE Account='%s' OR Account=LCASE('%s')""" % (search, search)
@@ -175,6 +175,7 @@ def searchDatabase():
                 else:
                     continue
             else:
+                found = True
                 break
     if (found):
         searchCommand = """SELECT * FROM entries WHERE Account='%s' OR Account=LCASE('%s')""" % (search, search)
@@ -189,15 +190,15 @@ def searchDatabase():
             count += 1
 
     while(found):
-        selectPassword = int(input("Enter the number of the desired password: "))
         try:
+            selectPassword = int(input("Enter the number of the desired password: "))
             chosenPassword = searchList[selectPassword - 1]
         except:
             print("Invalid choice. Please reenter...")
             continue
         else:
             print("Password of Account: " + chosenPassword)
-            exit = input("You may copy the password to your clipboard. Press Enter to return to the Main Menu.")
+            exit = input("You may copy the password to your clipboard (Ctrl + Shift + V). Press Enter to return to the Main Menu.")
             break
             #pyperclip.copy(chosenPassword) 
             #passwordClip = pyperclip.paste()
