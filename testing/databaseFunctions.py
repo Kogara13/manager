@@ -6,6 +6,9 @@ import getpass
 import random
 import string
 
+
+#Note: The functions of this project all connect to a locally-hosted mySQL database 
+
 """
 -------------------------------------------------------------
 Edits to function to comply with unit testing:

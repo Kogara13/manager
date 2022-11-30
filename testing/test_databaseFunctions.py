@@ -1,6 +1,9 @@
+#!/usr/bin/python3
 import unittest
 from databaseFunctions import addPassword
 from databaseFunctions import deleteSelectedPassword
+
+#Note: The functions of this project all connect to a locally hosted mySQL database
 
 class TestDatabaseInput(unittest.TestCase):
     def test_add(self):
