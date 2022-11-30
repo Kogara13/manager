@@ -157,36 +157,49 @@ def searchDatabase():
             database = 'passwords'
    )
     dbcursor = database.cursor()
+    found = True
     while(True):
             search = input("Enter the name of the Account: ")
-            countCommand = """SELECT COUNT(Account) FROM entries WHERE Account='%s' OR Account=LCASE('%s')""" % (search)
-            dbcursor.execute(numberOfResults)
+            countCommand = """SELECT COUNT(Account) FROM entries WHERE Account='%s' OR Account=LCASE('%s')""" % (search, search)
+            dbcursor.execute(countCommand)
             numOfResults = dbcursor.fetchone()
             for x in numOfResults:
                 results = x
             if results < 1:
-                notFound = input("Entry not found. Press Enter to retry or Q to quit")
+                found = False
+                notFound = input("Entry not found. Press Enter to retry or Q to quit: ")
                 if (notFound == 'Q' or notFound == 'q'):
                     break
                 else:
                     continue
-            searchCommand = """SELECT * FROM entries WHERE Account='%s' OR Account=LCASE('%s')""" % (search)
-            dbcursor.execute(searchCommand)
-            print("Account | Password")
-            print("------------------")
-            searchList = []
-            count = 1
-            for x in dbcursor:
-                print(count + ". " + x)
-                searchList.append(x[1])
-                count += 1
-            selectPassword = input("Enter the number of the desired password: ")
-            chosenPassword = searchList[selectPassword]
-            pyperclip.copy(chosenPassword) 
+            else:
+                break
+    if (found):
+        searchCommand = """SELECT * FROM entries WHERE Account='%s' OR Account=LCASE('%s')""" % (search, search)
+        dbcursor.execute(searchCommand)
+        print("Account | Password")
+        print("------------------")
+        searchList = []
+        count = 1
+        for x in dbcursor:
+            print(str(count) + ". " + str(x))
+            searchList.append(x[1])
+            count += 1
+
+    while(found):
+        selectPassword = int(input("Enter the number of the desired password: "))
+        try:
+            chosenPassword = searchList[selectPassword - 1]
+        except:
+            print("Invalid choice. Please reenter...")
+            continue
+        else:
+            print("Password of Account: " + chosenPassword)
+            exit = input("You may copy the password to your clipboard. Press Enter to return to the Main Menu.")
+            break
+            #pyperclip.copy(chosenPassword) 
+            #passwordClip = pyperclip.paste()
     
-
-
-
 def editSelection(): 
     database = mysql.connector.connect(
             host ='localhost', 

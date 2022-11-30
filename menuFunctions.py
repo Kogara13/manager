@@ -14,8 +14,9 @@ def mainMenu():
     generateTitle("Main Menu")
     print(" 1. Add Password")
     print(" 2. Delete Password")
-    print(" 3. Edit Password")
-    print(" 4. Generate Password")
+    print(" 3. Search Password")
+    print(" 4. Edit Password")
+    print(" 5. Generate Password")
     print(" Q. Quit")
     print("------------------------------------------")
     while(True):
@@ -25,8 +26,10 @@ def mainMenu():
         elif selection == '2':
             deleteMenu()
         elif selection == '3':
-            editMenu()
+            searchMenu()
         elif selection == '4':
+            editMenu()
+        elif selection == '5':
             generateMenu()
         elif (selection == 'Q' or selection == 'q'):
             break
