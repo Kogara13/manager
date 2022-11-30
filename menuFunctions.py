@@ -2,13 +2,14 @@
 
 import mysql.connector
 import databaseFunctions as database
+import main as main
 import getpass
 import os
 from sys import exit
 import pyfiglet as fig
 from time import sleep
 
-    
+"""    
 def mainMenu(): 
     os.system('clear')
     generateTitle("Main Menu")
@@ -35,6 +36,7 @@ def mainMenu():
             break
         else:
             print("Invalid entry")
+"""
 
 def addMenu():
     os.system('clear')
@@ -43,7 +45,7 @@ def addMenu():
     database.addPassword()
     print("Returning to main menu...")
     sleep(3)
-    mainMenu()
+    main.mainMenu()
 
 def deleteMenu():
     os.system('clear')
@@ -52,7 +54,7 @@ def deleteMenu():
     database.deleteSelectedPassword()
     print("Returning to Main Menu...")
     sleep(3)
-    mainMenu()
+    main.mainMenu()
 
 def editMenu():
     os.system('clear')
@@ -61,7 +63,7 @@ def editMenu():
     database.editSelection()
     print("Returning to Main Menu...")
     sleep(3)
-    mainMenu()
+    main.mainMenu()
 
 def searchMenu():
     os.system('clear')
@@ -70,7 +72,7 @@ def searchMenu():
     database.searchDatabase()
     print("Returning to main Menu...")
     sleep(3)
-    mainMenu()
+    main.mainMenu()
     
 def generateMenu():
     os.system('clear')
@@ -79,7 +81,7 @@ def generateMenu():
     database.generatePassword()
     print("Returning to Main Menu...")
     sleep(3)
-    mainMenu() 
+    main.mainMenu() 
     
 def generateTitle(page):
     ascii_title = fig.figlet_format(page, font = "banner3-D", width = 200)

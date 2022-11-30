@@ -97,7 +97,9 @@ def addPassword():
     
     newPassword = getpass.getpass(prompt='Enter the password of the new account: ')
     errorCounter = 3
-    while(True):
+    while(True):    
+        if newPassword == "":
+            print("<<<<<<<<WARNING: PASSWORD LEFT BLANK!>>>>>>>>")
         confirmPassword = getpass.getpass(prompt='Confirm new password: ')
         if newPassword != confirmPassword:
             errorCounter = errorCounter - 1
@@ -111,7 +113,7 @@ def addPassword():
             entry = (newName, newPassword)
             dbcursor.execute(command, entry)
             database.commit()
-            print("Password entered into database. ", end = ' ')
+            print("Password entered into database. ", end = '')
             break
     
 def deleteSelectedPassword():

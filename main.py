@@ -16,7 +16,7 @@ def main():
 
     check = database.passwordCheck()
     if (check):
-        menu.mainMenu()
+        mainMenu()
     else:
         print("\nGoodbye\n")
         sleep(1)
@@ -25,38 +25,42 @@ def main():
     sleep(1) 
     return
 
-"""
+
 def mainMenu():
-    os.system("clear")
-    menu.generateTitle("Main Menu")
-    print(" 1. Add Password\n
-            2. Delete Password\n
-            3. Edit Password\n
-            4. Generate Password\n
-            Q. Quit")
-    print("-----------------------------------------")
     while(True):
+        os.system("clear")
+        menu.generateTitle("Main Menu")
+        exit = True
+        print("1. Add Password\n2. Delete Password\n3. Search Password\n4. Edit Password\n5. Generate Password\nQ. Quit")
+        print("-----------------------------------------")
         selection = input("Choose an option: ")
         if selection == '1':
             menu.addMenu()
         elif selection == '2':
             menu.deleteMenu()
         elif selection == '3':
-            menu.editMenu()
+            menu.searchMenu()
         elif selection == '4':
+            menu.editMenu()
+        elif selection == '5':
             menu.generateMenu()
         elif (selection == 'Q' or selection == 'q'):
             os.system('clear')
-            confirmQuit = input("Are you sure you want to quit? ")
+            confirmQuit = input("Are you sure you want to quit? [Y/N]:  ")
             if (confirmQuit == 'N' or confirmQuit == 'n'):
-                continue
+                exit = False
             elif (confirmQuit == 'Y' or confirmQuit == 'y'):
-                return
+                exit = True
             else:
                 print("Invalid entry. Returning to Main Menu...")
-                sleep(1)
+                sleep(2)
                 continue
-"""
+            if (exit):
+                break
+            else:
+                continue
+    return
+
 
 if __name__ == "__main__":
     main()
