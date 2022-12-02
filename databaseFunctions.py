@@ -5,8 +5,6 @@ import mysql.connector
 import getpass
 import random
 import string
-import pyperclip
-
 
 def passwordCheck():
     check = False
