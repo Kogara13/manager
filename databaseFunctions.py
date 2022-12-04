@@ -1,17 +1,23 @@
 #!/usr/bin/python3  
 
+#import dependencies
 from time import sleep
 import mysql.connector
 import getpass
 import random
 import string
 
+#Called in main() to have the user enter the master password of the database
 def passwordCheck():
     check = False
     passwordCheck = 2
     while(check == False):
-        global passwordEntry
+        global passwordEntry #passwordEntry is later used throughout the program
         passwordEntry = getpass.getpass(prompt='Enter Master Password: ')
+        """
+        #Try to connect to the database using the entered password. If this results in an error, 
+        the exception will run and the function will loop through the try block 2 more times. 
+        """
         try:
             database = mysql.connector.connect(
                     host ='localhost', 
@@ -29,6 +35,7 @@ def passwordCheck():
             check = True
     return check
 
+#Function to check that the database and table being written to exist. If not, they will be created
 def checkDatabase():
         database = mysql.connector.connect(
                 host ='localhost', 
@@ -57,6 +64,11 @@ def checkDatabase():
         finally:
             sleep(2)
 
+
+#Throughout these functions, while(Ture) loops are used to handle input errors by the user
+
+
+#Connect to database to add password
 def addPassword(): 
     database = mysql.connector.connect(
             host ='localhost', 
